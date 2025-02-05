@@ -8,6 +8,7 @@ import com.demo.crud_op.model.Employee;
 import com.demo.crud_op.repo.CustomRepo;
 import com.demo.crud_op.repo.EmployeeRepo;
 import com.demo.crud_op.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +59,7 @@ public ResponseEntity<Page<EmployeeDTO>> getEmployeePage(Pageable pageable ){
 }
 
 @PostMapping("/addEmployee")
-    public ResponseEntity<Employee>addEmployee(@RequestBody Employee emp){
+    public ResponseEntity<Employee>addEmployee(@Valid @RequestBody Employee emp){
     if(repo.existsByEmail(emp.getEmail()))
     {
         throw new DuplicateEmployeeException("employee with the email "+emp.getEmail()+" alreadyExists" );
@@ -68,7 +69,7 @@ return new ResponseEntity<>(saveEmp,HttpStatus.CREATED);
 }
 
 @PutMapping("/updateEmp/{id}")
-    public ResponseEntity<Employee> updateEmp(@PathVariable int id,@RequestBody Employee empDetails)
+    public ResponseEntity<Employee> updateEmp(@PathVariable int id,@Valid @RequestBody Employee empDetails)
 {
      Optional<Employee>empData=repo.findById(id);
       if(empData.isPresent()) {

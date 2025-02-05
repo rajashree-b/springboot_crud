@@ -1,6 +1,7 @@
 package com.demo.crud_op.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,21 +16,30 @@ import java.util.Date;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name="id",unique = true,nullable = false)
     private int id;
 
+    @NotBlank
     @Column(name = "firstName", nullable = false)
     private String firstName;
 
+    @NotBlank
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
+    @NotBlank
     @Column(name = "jobTitle", nullable = false)
     private String jobTitle;
+
+    @NotNull(message="Mobile can't be null")
+    @Pattern(regexp = "^[0-9]{10}$",message="Mobile number should contain 10 digits")
 
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
+    @Email(message="Invalid Email Format")
+    @NotBlank(message="Email can't be blank")
     @Column(name="email" ,nullable=false)
     private String email;
 
