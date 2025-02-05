@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CustomRepo extends JpaRepository<Employee,Integer> {
 
-    @Query("SELECT new com.demo.crud_op.dto.EmployeeDTO(e.id, e.firstName, e.lastName) FROM Employee e")
+    @Query("SELECT new com.demo.crud_op.dto.EmployeeDTO(e.id, e.firstName, e.lastName) FROM Employee e ")
     Page<EmployeeDTO> findEmployeeDetails(Pageable pageable);
 
 }

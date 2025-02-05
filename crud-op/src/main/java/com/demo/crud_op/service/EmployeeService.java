@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +27,11 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> getEmpDetails() {
-        Page<EmployeeDTO>employeeDTOPage=customRepo.findEmployeeDetails(PageRequest.of(0,5));
+        Page<EmployeeDTO>employeeDTOPage=customRepo.findEmployeeDetails(PageRequest.of(0,5,Sort.by("firstName")));
         return employeeDTOPage.getContent();
     }
 
-
-    public Page<EmployeeDTO> getEmployeePage(Pageable pageable) {
+ public Page<EmployeeDTO> getEmployeePage(Pageable pageable) {
         return customRepo.findEmployeeDetails(pageable);
     }
 }

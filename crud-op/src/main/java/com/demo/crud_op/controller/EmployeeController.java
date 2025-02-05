@@ -2,6 +2,8 @@ package com.demo.crud_op.controller;
 
 
 import com.demo.crud_op.dto.EmployeeDTO;
+import com.demo.crud_op.exception.DuplicateEmployeeException;
+import com.demo.crud_op.exception.EmployeeNotFoundException;
 import com.demo.crud_op.model.Employee;
 import com.demo.crud_op.repo.CustomRepo;
 import com.demo.crud_op.repo.EmployeeRepo;
@@ -48,13 +50,19 @@ public ResponseEntity<Page<EmployeeDTO>> getEmployeePage(Pageable pageable ){
 
 @GetMapping("/employee/{id}")
     public ResponseEntity<Employee> fetchById(@PathVariable int id){
-    Optional<Employee> emp=repo.findById(id);
-    return emp.map(value->new ResponseEntity<>(value,HttpStatus.OK)).orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    Employee emp = repo.findById(id)
+            .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found"));
+
+    return new ResponseEntity<>(emp, HttpStatus.OK);
 
 }
 
 @PostMapping("/addEmployee")
     public ResponseEntity<Employee>addEmployee(@RequestBody Employee emp){
+    if(repo.existsByEmail(emp.getEmail()))
+    {
+        throw new DuplicateEmployeeException("employee with the email "+emp.getEmail()+" alreadyExists" );
+    }
  Employee saveEmp=repo.save(emp);
 return new ResponseEntity<>(saveEmp,HttpStatus.CREATED);
 }
@@ -86,8 +94,7 @@ public ResponseEntity<String>deleteEmpById(@PathVariable int id)
  return new ResponseEntity<>("Employee Deleted",HttpStatus.OK);
     }
     else {
-        return new ResponseEntity<>("Employee not found",HttpStatus.NOT_FOUND);
-
+    throw new EmployeeNotFoundException("employee with id "+ id+ " not found");
     }
 
 }
